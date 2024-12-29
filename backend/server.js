@@ -9,12 +9,20 @@ app.use(cors());
 app.use(bodyParser.json()); // Для обработки POST-запросов с JSON
 
 // Подключение к базе данных PostgreSQL
+require('dotenv').config();  // Подключаем dotenv
+
+const { Client } = require('pg'); // Не забудьте подключить PostgreSQL клиент
+
 const client = new Client({
-  host: 'localhost',
-  database: 'event_crm', // Имя вашей базы данных
-  user: 'postgres',     // Ваш пользователь PostgreSQL
-  password: '123456', // Ваш пароль PostgreSQL
+  host: process.env.DB_HOST,      // Используем переменную из .env
+  database: process.env.DB_NAME,  // Используем переменную из .env
+  user: process.env.DB_USER,      // Используем переменную из .env
+  password: process.env.DB_PASSWORD,  // Используем переменную из .env
 });
+
+client.connect()
+  .then(() => console.log('Connected to the database'))
+  .catch(err => console.error('Error connecting to the database', err.stack));
 
 client.connect()
   .then(() => console.log('Подключение к базе данных установлено'))
